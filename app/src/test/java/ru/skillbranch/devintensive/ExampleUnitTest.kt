@@ -1,13 +1,14 @@
 package ru.skillbranch.devintensive
 
+import org.junit.Assert.assertEquals
 import org.junit.Test
-
-import org.junit.Assert.*
 import ru.skillbranch.devintensive.extensions.TimeUnits
 import ru.skillbranch.devintensive.extensions.add
 import ru.skillbranch.devintensive.extensions.format
 import ru.skillbranch.devintensive.extensions.toUserView
-import ru.skillbranch.devintensive.models.*
+import ru.skillbranch.devintensive.models.BaseMessage
+import ru.skillbranch.devintensive.models.Chat
+import ru.skillbranch.devintensive.models.User
 import java.util.*
 
 /**
@@ -31,6 +32,9 @@ class ExampleUnitTest {
 //        val user = User.makeUser("John Cena")
 //        val user2 = User.makeUser("John Wick")
         val user = User.makeUser("John Wick")
+//        val user = User.makeUser("")
+//        val user = User.makeUser(" ")
+//        val user = User.makeUser(null)
         val user2 = user.copy(id = "2", lastName = "Cena", lastVisit = Date())
         print("$user \n$user2")
     }
@@ -50,16 +54,18 @@ class ExampleUnitTest {
     @Test
     fun test_copy() {
         val user = User.makeUser("John Wick")
-        var user2 = user.copy(lastVisit = Date())
-        var user3 = user.copy(lastVisit = Date().add(-2, TimeUnits.SECOND))
-        var user4 = user.copy(lastName = "Cena", lastVisit = Date().add(2, TimeUnits.HOUR))
+        val user2 = user.copy(lastVisit = Date())
+        val user3 = user.copy(lastVisit = Date().add(-2, TimeUnits.SECOND))
+        val user4 = user.copy(lastName = "Cena", lastVisit = Date().add(2, TimeUnits.HOUR))
 
-        println("""
+        println(
+            """
                 ${user.lastVisit?.format()}
                 ${user2.lastVisit?.format()}
                 ${user3.lastVisit?.format()}      
                 ${user4.lastVisit?.format()}      
-            """.trimIndent())
+            """.trimIndent()
+        )
     }
 
     @Test
@@ -67,6 +73,12 @@ class ExampleUnitTest {
         val user = User.makeUser("Макеев Михаил")
         val newUser = user.copy(lastVisit = Date().add(-7, TimeUnits.SECOND))
         println(newUser)
+
+//        val initials = Utils.toInitials("", "Михаил")
+//        println(initials)
+
+//        val translit = Utils.transliterations("Щербаков Женя")
+//        println(translit)
 
         val userView = newUser.toUserView()
         userView.printMe()
