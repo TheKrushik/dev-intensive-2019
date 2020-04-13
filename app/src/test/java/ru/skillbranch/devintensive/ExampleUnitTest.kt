@@ -2,13 +2,11 @@ package ru.skillbranch.devintensive
 
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import ru.skillbranch.devintensive.extensions.TimeUnits
-import ru.skillbranch.devintensive.extensions.add
-import ru.skillbranch.devintensive.extensions.format
-import ru.skillbranch.devintensive.extensions.toUserView
+import ru.skillbranch.devintensive.extensions.*
 import ru.skillbranch.devintensive.models.BaseMessage
 import ru.skillbranch.devintensive.models.Chat
 import ru.skillbranch.devintensive.models.User
+import ru.skillbranch.devintensive.utils.Utils
 import java.util.*
 
 /**
@@ -25,16 +23,27 @@ class ExampleUnitTest {
     @Test
     fun test_instance() {
         val user2 = User("2", "John", "Cena")
+
+        val user = User.Builder()
+                .id("555")
+                .firstName("Ivan")
+                .lastName("Petrov")
+                .avatar("https://site.com")
+                .rating(5)
+                .respect(15)
+                .lastVisit(Date().add(2, TimeUnits.SECOND))
+                .isOnline(true)
+                .build()
+        println(user)
     }
 
     @Test
     fun test_factory() {
-//        val user = User.makeUser("John Cena")
-//        val user2 = User.makeUser("John Wick")
         val user = User.makeUser("John Wick")
+//        val user = User.makeUser(null)
 //        val user = User.makeUser("")
 //        val user = User.makeUser(" ")
-//        val user = User.makeUser(null)
+//        val user = User.makeUser("John")
         val user2 = user.copy(id = "2", lastName = "Cena", lastVisit = Date())
         print("$user \n$user2")
     }
@@ -55,15 +64,15 @@ class ExampleUnitTest {
     fun test_copy() {
         val user = User.makeUser("John Wick")
         val user2 = user.copy(lastVisit = Date())
-        val user3 = user.copy(lastVisit = Date().add(-2, TimeUnits.SECOND))
-        val user4 = user.copy(lastName = "Cena", lastVisit = Date().add(2, TimeUnits.HOUR))
+        val user3 = user.copy(lastVisit = Date().add(2, TimeUnits.SECOND))
+        val user4 = user.copy(lastName = "Cena", lastVisit = Date().add(-4, TimeUnits.DAY))
 
         println(
-            """
+                """
                 ${user.lastVisit?.format()}
                 ${user2.lastVisit?.format()}
                 ${user3.lastVisit?.format()}      
-                ${user4.lastVisit?.format()}      
+                ${user4.lastVisit?.format("HH:mm")}      
             """.trimIndent()
         )
     }
@@ -74,11 +83,20 @@ class ExampleUnitTest {
         val newUser = user.copy(lastVisit = Date().add(-7, TimeUnits.SECOND))
         println(newUser)
 
-//        val initials = Utils.toInitials("", "Михаил")
-//        println(initials)
+        println(Utils.toInitials("john", "doe")) //JD
+        println(Utils.toInitials("John", null)) //J
+        println(Utils.toInitials(null, null)) //null
+        println(Utils.toInitials(" ", "")) //null
 
-//        val translit = Utils.transliterations("Щербаков Женя")
-//        println(translit)
+        println(Utils.transliteration("Женя Стереотипов")) //Zhenya Stereotipov
+        println(Utils.transliteration("Amazing Петр", "_")) //Amazing_Petr
+
+        println(Date().add(-2, TimeUnits.HOUR).humanizeDiff()) //2 часа назад
+        println(Date().add(-5, TimeUnits.DAY).humanizeDiff()) //5 дней назад
+        println(Date().add(2, TimeUnits.MINUTE).humanizeDiff()) //через 2 минуты
+        println(Date().add(7, TimeUnits.DAY).humanizeDiff()) //через 7 дней
+        println(Date().add(-400, TimeUnits.DAY).humanizeDiff()) //более года назад
+        println(Date().add(400, TimeUnits.DAY).humanizeDiff())//более чем через год
 
         val userView = newUser.toUserView()
         userView.printMe()
@@ -86,9 +104,11 @@ class ExampleUnitTest {
 
     @Test
     fun test_abstract_factory() {
-        val user = User.makeUser("Макеев Михаил")
+        val user = User.makeUser("Михаил Макеев")
+        val user2 = User.makeUser("Василий")
         val textMessage = BaseMessage.makeMessage(user, Chat("0"), payload = "any text message", type = "text")
-        val imageMessage = BaseMessage.makeMessage(user, Chat("0"), payload = "any image url", type = "image")
+        val imageMessage = BaseMessage.makeMessage(user2, Chat("0"),
+                date = Date().add(-2, TimeUnits.HOUR), payload = "https://anyurl.com", type = "image", isIncoming = true)
 
         println(textMessage.formatMessage())
         println(imageMessage.formatMessage())

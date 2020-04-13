@@ -14,7 +14,7 @@ object Utils {
         return firstName to lastName
     }
 
-    fun transliterations(payload: String, divider: String = " "): String {
+    fun transliteration(payload: String, divider: String = " "): String {
         var result = ""
 
         for (c in payload) {
@@ -22,7 +22,7 @@ object Utils {
             val isTitle = char.isUpperCase()
             if (isTitle) char = char.toLowerCase()
 
-            var word = setCharToString(char)
+            var word = setCharToString(char.toString(), divider)
 
             if (isTitle) word = word.capitalize()
 
@@ -31,49 +31,50 @@ object Utils {
         return result
     }
 
-    private fun setCharToString(char: Char): String {
+    private fun setCharToString(char: String, divider: String): String {
         return when (char) {
-            ' ' -> ""
-            'а' -> "a"
-            'б' -> "b"
-            'в' -> "v"
-            'г' -> "g"
-            'д' -> "d"
-            'е' -> "e"
-            'ё' -> "jo"
-            'ж' -> "zh"
-            'з' -> "z"
-            'и' -> "i"
-            'й' -> "j"
-            'к' -> "k"
-            'л' -> "l"
-            'м' -> "m"
-            'н' -> "n"
-            'о' -> "o"
-            'п' -> "p"
-            'р' -> "r"
-            'с' -> "s"
-            'т' -> "t"
-            'у' -> "u"
-            'ф' -> "f"
-            'х' -> "h"
-            'ц' -> "c"
-            'ч' -> "ch"
-            'ш' -> "sh"
-            'щ' -> "shh"
-            'ъ' -> ""
-            'ы' -> "y"
-            'ь' -> "'"
-            'э' -> "je"
-            'ю' -> "yu"
-            'я' -> "ya"
-            else -> char.toString()
+            " " -> divider
+            "а" -> "a"
+            "б" -> "b"
+            "в" -> "v"
+            "г" -> "g"
+            "д" -> "d"
+            "е" -> "e"
+            "ё" -> "e"
+            "ж" -> "zh"
+            "з" -> "z"
+            "и" -> "i"
+            "й" -> "i"
+            "к" -> "k"
+            "л" -> "l"
+            "м" -> "m"
+            "н" -> "n"
+            "о" -> "o"
+            "п" -> "p"
+            "р" -> "r"
+            "с" -> "s"
+            "т" -> "t"
+            "у" -> "u"
+            "ф" -> "f"
+            "х" -> "h"
+            "ц" -> "c"
+            "ч" -> "ch"
+            "ш" -> "sh"
+            "щ" -> "sh'"
+            "ъ" -> ""
+            "ы" -> "i"
+            "ь" -> ""
+            "э" -> "e"
+            "ю" -> "yu"
+            "я"-> "ya"
+            else -> char
         }
     }
 
     fun toInitials(firstName: String?, lastName: String?): String? {
-        val first = firstName?.firstOrNull()
-        val last = lastName?.first()
+        if (firstName?.trim().isNullOrEmpty() && lastName?.trim().isNullOrEmpty()) return null
+        val first = firstName?.trim()?.firstOrNull() ?: ""
+        val last = lastName?.trim()?.firstOrNull() ?: ""
         return "$first$last".toUpperCase()
     }
 }
