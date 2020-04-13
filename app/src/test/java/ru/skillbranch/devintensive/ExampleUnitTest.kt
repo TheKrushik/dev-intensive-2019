@@ -72,9 +72,12 @@ class ExampleUnitTest {
                 ${user.lastVisit?.format()}
                 ${user2.lastVisit?.format()}
                 ${user3.lastVisit?.format()}      
-                ${user4.lastVisit?.format("HH:mm")}      
+                ${user4.lastVisit?.format()}      
             """.trimIndent()
         )
+
+        println(Date().format()) //14:00:00 27.06.19
+        println(Date().format("HH:mm")) //14:00
     }
 
     @Test
