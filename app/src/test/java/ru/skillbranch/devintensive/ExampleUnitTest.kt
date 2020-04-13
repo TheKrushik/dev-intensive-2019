@@ -107,6 +107,9 @@ class ExampleUnitTest {
         println("Bender Bending Rodriguez — дословно «Сгибальщик Сгибающий Родригес»".truncate(15)) //Bender Bending...
         println("A     ".truncate(3)) //A
 
+        println("<p class=\"title\">Образовательное IT-сообщество Skill Branch</p>".stripHtml())//Образовательное IT-сообщество Skill Branch
+        println("<p>Образовательное       IT-сообщество Skill Branch</p>".stripHtml()) //Образовательное IT-сообщество Skill Branch
+
         val userView = newUser.toUserView()
         userView.printMe()
     }

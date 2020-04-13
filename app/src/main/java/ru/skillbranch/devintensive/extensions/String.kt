@@ -7,4 +7,13 @@ fun String.truncate(numb: Int = 16): String {
     else result.removeRange(numb, result.length).trim() + "..."
 }
 
+fun String.stripHtml(): String {
+    // ("& < > ' "")
+    var result = this
+    result = result.replace(Regex("<.*?>"), "")
+    result = result.replace(Regex("&.*?;"), "")
+    result = result.replace(Regex("\\s+"), " ")
+    return result
+}
+
 
