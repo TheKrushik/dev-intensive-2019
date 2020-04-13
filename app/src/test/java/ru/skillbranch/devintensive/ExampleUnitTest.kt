@@ -98,6 +98,15 @@ class ExampleUnitTest {
         println(Date().add(-400, TimeUnits.DAY).humanizeDiff()) //более года назад
         println(Date().add(400, TimeUnits.DAY).humanizeDiff())//более чем через год
 
+        println(TimeUnits.SECOND.plural(1)) //1 секунду
+        println(TimeUnits.MINUTE.plural(4)) //4 минуты
+        println(TimeUnits.HOUR.plural(19)) //19 часов
+        println(TimeUnits.DAY.plural(222)) //222 дня
+
+        println("Bender Bending Rodriguez — дословно «Сгибальщик Сгибающий Родригес»".truncate()) //Bender Bending R...
+        println("Bender Bending Rodriguez — дословно «Сгибальщик Сгибающий Родригес»".truncate(15)) //Bender Bending...
+        println("A     ".truncate(3)) //A
+
         val userView = newUser.toUserView()
         userView.printMe()
     }

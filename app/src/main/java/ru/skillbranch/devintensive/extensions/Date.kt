@@ -62,5 +62,52 @@ enum class TimeUnits {
     SECOND,
     MINUTE,
     HOUR,
-    DAY
+    DAY;
+
+    fun plural(value: Int): String {
+        return when (this) {
+            SECOND -> secondAsPlurals(value * 1L)
+            MINUTE -> minuteAsPlurals(value * 1L)
+            HOUR -> hourAsPlurals(value * 1L)
+            DAY -> dayAsPlurals(value * 1L)
+        }
+    }
+}
+
+private fun secondAsPlurals(value: Long) = when (value.asPlurals) {
+    Plurals.ONE -> "$value секунду"
+    Plurals.FEW -> "$value секунды"
+    Plurals.MANY -> "$value секунд"
+}
+
+private fun minuteAsPlurals(value: Long) = when (value.asPlurals) {
+    Plurals.ONE -> "$value минуту"
+    Plurals.FEW -> "$value минуты"
+    Plurals.MANY -> "$value минут"
+}
+
+private fun hourAsPlurals(value: Long) = when (value.asPlurals) {
+    Plurals.ONE -> "$value час"
+    Plurals.FEW -> "$value часа"
+    Plurals.MANY -> "$value часов"
+}
+
+private fun dayAsPlurals(value: Long) = when (value.asPlurals) {
+    Plurals.ONE -> "$value день"
+    Plurals.FEW -> "$value дня"
+    Plurals.MANY -> "$value дней"
+}
+
+val Long.asPlurals
+    get() = when {
+        this % 100L in 5L..20L -> Plurals.MANY
+        this % 10L == 1L -> Plurals.ONE
+        this % 10L in 2L..4L -> Plurals.FEW
+        else -> Plurals.MANY
+    }
+
+enum class Plurals {
+    ONE,
+    FEW,
+    MANY
 }
