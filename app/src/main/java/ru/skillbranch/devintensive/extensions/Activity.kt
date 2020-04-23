@@ -9,8 +9,10 @@ import android.view.inputmethod.InputMethodManager
 import kotlin.math.roundToInt
 
 fun Activity.hideKeyboard() {
-    val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-    imm.hideSoftInputFromWindow(currentFocus?.windowToken, InputMethodManager.SHOW_FORCED)
+    if (isKeyboardOpen()) {
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(currentFocus?.windowToken, InputMethodManager.SHOW_FORCED)
+    }
 }
 
 fun Activity.isKeyboardOpen(): Boolean {
@@ -22,6 +24,7 @@ fun Activity.isKeyboardOpen(): Boolean {
     return heightDiff > marginOfError
 }
 
-fun Context.convertDpToPx(dp: Float): Float = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, this.resources.displayMetrics)
+fun Context.convertDpToPx(dp: Float): Float =
+    TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, this.resources.displayMetrics)
 
 fun Activity.isKeyboardClosed(): Boolean = !isKeyboardOpen()
