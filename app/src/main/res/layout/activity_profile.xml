@@ -262,7 +262,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <ImageView
-            android:id="@+id/ic_eye"
+            android:id="@+id/iv_eye"
             android:layout_width="@dimen/size_image_large_24"
             android:layout_height="@dimen/size_image_large_24"
             android:layout_gravity="center_vertical"
