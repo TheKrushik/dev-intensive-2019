@@ -77,4 +77,13 @@ object Utils {
         val last = lastName?.trim()?.firstOrNull() ?: ""
         return "$first$last".toUpperCase()
     }
+
+    fun isValidUrl(string: String): Boolean {
+        if (string.isNullOrEmpty()) return true
+
+        val regex =
+            Regex("""(https://|www\.|https://www\.)?github.com[/](?!pricing|enterprise|join|features|topics|collections|trending|events|marketplace|nonprofit|customer-stories|security|login)(?! )[a-zA-Z0-9-]+""")
+
+        return string.matches(regex)
+    }
 }

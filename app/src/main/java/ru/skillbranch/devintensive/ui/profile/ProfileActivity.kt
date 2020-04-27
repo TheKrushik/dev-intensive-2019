@@ -4,7 +4,10 @@ import android.graphics.ColorFilter
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
+import android.util.TypedValue
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
@@ -14,6 +17,7 @@ import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.activity_profile.*
 import ru.skillbranch.devintensive.R
 import ru.skillbranch.devintensive.models.Profile
+import ru.skillbranch.devintensive.utils.Utils
 import ru.skillbranch.devintensive.viewmodels.ProfileViewModel
 
 class ProfileActivity : AppCompatActivity() {
@@ -22,18 +26,18 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     private lateinit var viewModel: ProfileViewModel
-    var isEditMode = false
-    lateinit var viewFields: Map<String, TextView>
-
+    private var isEditMode = false
+    private var isValidRepository = true
+    private lateinit var viewFields: Map<String, TextView>
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        //TODO set customeTheme this before super and setContentView
-
+        setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
         initViews(savedInstanceState)
         initViewModel()
         Log.d("M_ProfileActivity", "[onCreate]")
+
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -58,6 +62,7 @@ class ProfileActivity : AppCompatActivity() {
                 v.text = it[k].toString()
             }
         }
+        updateAvatar(profile)
     }
 
     private fun initViews(savedInstanceState: Bundle?) {
@@ -76,7 +81,14 @@ class ProfileActivity : AppCompatActivity() {
         showCurrentMode(isEditMode)
 
         btn_edit.setOnClickListener {
-            if (isEditMode) saveProfileInfo()
+            if (isEditMode){
+                if (isValidRepository){
+                    saveProfileInfo()
+                }else{
+                    et_repository.setText("")
+                    return@setOnClickListener
+                }
+            }
             isEditMode = !isEditMode
             showCurrentMode(isEditMode)
         }
@@ -84,6 +96,22 @@ class ProfileActivity : AppCompatActivity() {
         btn_switch_theme.setOnClickListener {
             viewModel.switchTheme()
         }
+
+        et_repository.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {}
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    Log.d("M_ProfileActivity", "$s ${Utils.isValidUrl(s.toString())}")
+                    if (!Utils.isValidUrl(s.toString())) {
+                        wr_repository.error = "Невалидный адрес репозитория"
+                        isValidRepository = false
+                    } else {
+                        wr_repository.isErrorEnabled = false
+                        isValidRepository = true
+                    }
+            }
+        })
 
     }
 
@@ -128,7 +156,16 @@ class ProfileActivity : AppCompatActivity() {
         ).apply {
             viewModel.saveProfileData(this)
         }
+    }
 
+    private fun updateAvatar(profile: Profile) {
+        val userInitials = Utils.toInitials(profile.firstName, profile.lastName)
+        if (userInitials != null) {
+            iv_avatar.setInitials(userInitials)
+            val color = TypedValue()
+            theme.resolveAttribute(R.attr.colorAccent, color, true)
+            iv_avatar.setBgColor(color.data)
+        }
     }
 
 }
