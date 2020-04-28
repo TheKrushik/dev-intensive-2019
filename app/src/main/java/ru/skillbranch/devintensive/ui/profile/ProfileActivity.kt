@@ -164,6 +164,7 @@ class ProfileActivity : AppCompatActivity() {
             repository = et_repository.text.toString()
         ).apply {
             viewModel.saveProfileData(this)
+            updateAvatar(this)
         }
     }
 
@@ -174,6 +175,10 @@ class ProfileActivity : AppCompatActivity() {
             val color = TypedValue()
             theme.resolveAttribute(R.attr.colorAccent, color, true)
             iv_avatar.setBgColor(color.data)
+        }else{
+            iv_avatar.setInitials(null)
+            val avatar = resources.getDrawable(R.drawable.ic_avatar, theme)
+            iv_avatar.setImageDrawable(avatar)
         }
     }
 

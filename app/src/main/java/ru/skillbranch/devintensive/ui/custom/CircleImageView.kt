@@ -96,6 +96,7 @@ class CircleImageView @JvmOverloads constructor(
     override fun setImageDrawable(drawable: Drawable?) {
         super.setImageDrawable(drawable)
         if (initials == null) prepareShader(width, height)
+
     }
 
     override fun setImageResource(resId: Int) {
@@ -103,7 +104,7 @@ class CircleImageView @JvmOverloads constructor(
         if (initials == null) prepareShader(width, height)
     }
 
-    fun setInitials(initials: String) {
+    fun setInitials(initials: String?) {
         this.initials = initials
         invalidate()
     }
