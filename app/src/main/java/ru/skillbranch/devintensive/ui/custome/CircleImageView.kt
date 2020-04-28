@@ -6,10 +6,8 @@ import android.graphics.*
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.widget.ImageView
-import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.annotation.Dimension
-import androidx.annotation.Px
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.graphics.toRectF
@@ -30,10 +28,8 @@ class CircleImageView @JvmOverloads constructor(
         private const val DEFAULT_SIZE = 40
     }
 
-    @Px
-    var borderWidth: Float = context.dpToPx(DEFAULT_BORDER_WIDTH)
 
-    @ColorInt
+    var borderWidth: Float = context.dpToPx(DEFAULT_BORDER_WIDTH)
     private var borderColor: Int = Color.WHITE
 
     private val avatarPaint = Paint(Paint.ANTI_ALIAS_FLAG)
@@ -117,7 +113,6 @@ class CircleImageView @JvmOverloads constructor(
             ContextCompat.getColor(context, R.color.color_accent)
     }
 
-    @Dimension
     fun getBorderWidth(): Int {
         return context.pxToDp(borderWidth)
     }
@@ -128,7 +123,6 @@ class CircleImageView @JvmOverloads constructor(
         invalidate()
     }
 
-    @ColorInt
     fun getBorderColor(): Int = borderColor
 
     fun setBorderColor(hex: String) {

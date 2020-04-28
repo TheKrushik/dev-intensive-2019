@@ -102,7 +102,7 @@ class ProfileActivity : AppCompatActivity() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                    Log.d("M_ProfileActivity", "$s ${Utils.isValidUrl(s.toString())}")
+//                    Log.d("M_ProfileActivity", "$s ${Utils.isValidUrl(s.toString())}")
                     if (!Utils.isValidUrl(s.toString())) {
                         wr_repository.error = "Невалидный адрес репозитория"
                         isValidRepository = false

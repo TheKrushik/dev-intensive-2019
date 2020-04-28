@@ -28,3 +28,11 @@ fun Context.convertDpToPx(dp: Float): Float =
     TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, this.resources.displayMetrics)
 
 fun Activity.isKeyboardClosed(): Boolean = !isKeyboardOpen()
+
+fun Context.dpToPx(dp: Int): Float {
+    return dp.toFloat() * this.resources.displayMetrics.density
+}
+
+fun Context.pxToDp(px: Float): Int {
+    return (px / this.resources.displayMetrics.density).toInt()
+}
