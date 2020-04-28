@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <ru.skillbranch.devintensive.ui.custome.AspectRatioImageView
+        <ru.skillbranch.devintensive.ui.custom.AspectRatioImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scaleType="centerCrop"
@@ -35,13 +35,11 @@
                 android:background="@drawable/btn_round_bg"
                 android:src="@drawable/ic_switch_day_night" />
 
-            <ru.skillbranch.devintensive.ui.custome.CircleImageView
+            <ru.skillbranch.devintensive.ui.custom.CircleImageView
                 android:id="@+id/iv_avatar"
                 android:layout_width="@dimen/avatar_round_size"
                 android:layout_height="@dimen/avatar_round_size"
                 android:layout_centerHorizontal="true"
-                app:cv_borderColor="@color/color_accent"
-                app:cv_borderWidth="5dp"
                 android:src="@drawable/avatar_default" />
 
             <ImageButton

@@ -1,4 +1,4 @@
-package ru.skillbranch.devintensive.ui.custome
+package ru.skillbranch.devintensive.ui.custom
 
 import android.annotation.SuppressLint
 import android.content.Context
