@@ -38,6 +38,15 @@ class ProfileActivity : AppCompatActivity() {
         initViewModel()
         Log.d("M_ProfileActivity", "[onCreate]")
 
+
+//        iv_avatar.setBorderWidth(10)
+//        iv_avatar.setBorderColor(R.color.color_accent_night)
+//
+//        val borderWidth = iv_avatar.getBorderWidth()
+//        val borderColor = iv_avatar.getBorderColor()
+//
+//        Log.d("M_ProfileActivity", "[onCreate] $borderWidth $borderColor")
+
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
