@@ -177,8 +177,10 @@ class ProfileActivity : AppCompatActivity() {
             iv_avatar.setBgColor(color.data)
         }else{
             iv_avatar.setInitials(null)
-            val avatar = resources.getDrawable(R.drawable.ic_avatar, theme)
-            iv_avatar.setImageDrawable(avatar)
+//            val avatar = resources.getDrawable(R.drawable.ic_avatar, theme)
+//            iv_avatar.setImageDrawable(avatar)
+//            val bitmap = iv_avatar.drawableToBitmap(avatar)
+//            iv_avatar.setImageBitmap(bitmap)
         }
     }
 
