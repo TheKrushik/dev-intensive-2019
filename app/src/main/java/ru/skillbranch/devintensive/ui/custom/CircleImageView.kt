@@ -3,17 +3,23 @@ package ru.skillbranch.devintensive.ui.custom
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.*
-import android.graphics.drawable.Drawable
+import android.graphics.Bitmap.Config
+import android.graphics.PorterDuff.Mode
+import android.graphics.drawable.BitmapDrawable
 import android.util.AttributeSet
+import android.view.View
 import android.widget.ImageView
+import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.annotation.Dimension
+import androidx.annotation.Dimension.DP
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
-import androidx.core.graphics.toRectF
+import ru.skillbranch.devintensive.App
 import ru.skillbranch.devintensive.R
-import ru.skillbranch.devintensive.extensions.dpToPx
-import ru.skillbranch.devintensive.extensions.pxToDp
+import ru.skillbranch.devintensive.extensions.convertDpToPx
+import ru.skillbranch.devintensive.extensions.convertPxToDp
+import kotlin.math.min
 
 @SuppressLint("AppCompatCustomView")
 class CircleImageView @JvmOverloads constructor(
@@ -23,166 +29,83 @@ class CircleImageView @JvmOverloads constructor(
 ) : ImageView(context, attrs, defStyleAttr) {
 
     companion object {
+        private const val DEFAULT_BORDER_COLOR: Int = Color.WHITE
         private const val DEFAULT_BORDER_WIDTH = 2
-        private const val DEFAULT_BORDER_COLOR = Color.WHITE
-        private const val DEFAULT_SIZE = 40
     }
 
-
-    var borderWidth: Float = context.dpToPx(DEFAULT_BORDER_WIDTH)
-    private var borderColor: Int = Color.WHITE
-
-    private val avatarPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private var borderColor = DEFAULT_BORDER_COLOR
+    private var borderWidth = context.convertDpToPx(DEFAULT_BORDER_WIDTH)
     private val borderPaint = Paint(Paint.ANTI_ALIAS_FLAG)
-    private val initialsPaint = Paint(Paint.ANTI_ALIAS_FLAG)
-    private val viewRect = Rect()
-    private val borderRect = Rect()
-    private var initials: String? = null
-    private var bgColor: Int? = null
+    private val circlePaint = Paint(Paint.ANTI_ALIAS_FLAG)
+
 
     init {
         if (attrs != null) {
             val a = context.obtainStyledAttributes(attrs, R.styleable.CircleImageView)
-
             borderColor = a.getColor(R.styleable.CircleImageView_cv_borderColor, DEFAULT_BORDER_COLOR)
-            borderWidth =
-                a.getDimension(R.styleable.CircleImageView_cv_borderWidth, context.dpToPx(DEFAULT_BORDER_WIDTH))
+            borderWidth = a.getDimension(
+                R.styleable.CircleImageView_cv_borderWidth,
+                context.convertDpToPx(DEFAULT_BORDER_WIDTH)
+            )
             a.recycle()
         }
-
-        scaleType = ScaleType.CENTER_CROP
-        setup()
+        borderPaint.style = Paint.Style.STROKE
+        setLayerType(View.LAYER_TYPE_SOFTWARE, null)
     }
 
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-
-        val initSize = resolveDefaultSize(widthMeasureSpec)
-        setMeasuredDimension(initSize, initSize)
-    }
-
-    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
-        super.onSizeChanged(w, h, oldw, oldh)
-
-        if (w == 0) return
-        with(viewRect) {
-            left = 0
-            top = 0
-            right = w
-            bottom = h
-        }
-
-        prepareShader(w, h)
-    }
-
-    override fun onDraw(canvas: Canvas) {
-        if (initials != null) {
-            drawInitials(canvas)
-        } else {
-            drawAvatar(canvas)
-        }
-
-        val half = (borderWidth / 2).toInt()
-        borderRect.set(viewRect)
-        borderRect.inset(half, half)
-        canvas.drawOval(borderRect.toRectF(), borderPaint)
-    }
-
-    override fun setImageBitmap(bm: Bitmap?) {
-        super.setImageBitmap(bm)
-        if (initials == null) prepareShader(width, height)
-    }
-
-    override fun setImageDrawable(drawable: Drawable?) {
-        super.setImageDrawable(drawable)
-        if (initials == null) prepareShader(width, height)
-
-    }
-
-    override fun setImageResource(resId: Int) {
-        super.setImageResource(resId)
-        if (initials == null) prepareShader(width, height)
-    }
-
-    fun setInitials(initials: String?) {
-        this.initials = initials
-        invalidate()
-    }
-
-    fun setBgColor(bgColor: Int?) {
-        if (bgColor != null) this.bgColor = bgColor else this.bgColor =
-            ContextCompat.getColor(context, R.color.color_accent)
-    }
-
-    fun getBorderWidth(): Int {
-        return context.pxToDp(borderWidth)
-    }
+    @Dimension(unit = DP)
+    fun getBorderWidth(): Int = context.convertPxToDp(borderWidth)
 
     fun setBorderWidth(@Dimension width: Int) {
-        borderWidth = context.dpToPx(width)
-        borderPaint.strokeWidth = borderWidth
-        invalidate()
+        borderWidth = context.convertDpToPx(width)
+        this.invalidate()
     }
 
+    @ColorInt
     fun getBorderColor(): Int = borderColor
 
     fun setBorderColor(hex: String) {
         borderColor = Color.parseColor(hex)
-        borderPaint.color = borderColor
-        invalidate()
+        this.invalidate()
     }
 
     fun setBorderColor(@ColorRes colorId: Int) {
-        borderColor = ContextCompat.getColor(context, colorId)
-        borderPaint.color = borderColor
-        invalidate()
+        borderColor = ContextCompat.getColor(App.applicationContext(), colorId)
+        this.invalidate()
     }
 
-    private fun setup() {
-        with(borderPaint) {
-            style = Paint.Style.STROKE
-            strokeWidth = borderWidth
-            color = borderColor
+    override fun onDraw(canvas: Canvas) {
+        if (width == 0 || height == 0) return
+        val bitmap = getBitmapFromDrawable(width, height) ?: return
+
+        val halfWidth = width / 2F
+        val halfHeight = height / 2F
+        val radius = min(halfWidth, halfHeight)
+
+        circlePaint.xfermode = PorterDuffXfermode(Mode.SRC)
+        canvas.drawCircle(halfWidth, halfHeight, radius, circlePaint)
+
+        circlePaint.xfermode = PorterDuffXfermode(Mode.SRC_IN)
+        canvas.drawBitmap(bitmap, 0F, 0F, circlePaint)
+
+        if (borderWidth > 0) {
+            borderPaint.color = borderColor
+            borderPaint.strokeWidth = borderWidth
+            canvas.drawCircle(halfWidth, halfHeight, radius - borderWidth / 2, borderPaint)
         }
     }
 
-    private fun prepareShader(w: Int, h: Int) {
-        if (w == 0 || drawable == null) return
-        val srcBm = drawable.toBitmap(w, h, Bitmap.Config.ARGB_8888)
-        avatarPaint.shader = BitmapShader(srcBm, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP)
-    }
-
-    private fun resolveDefaultSize(spec: Int): Int {
-        return when (MeasureSpec.getMode(spec)) {
-            MeasureSpec.UNSPECIFIED -> context.dpToPx(DEFAULT_SIZE).toInt()
-            MeasureSpec.AT_MOST -> MeasureSpec.getSize(spec)
-            MeasureSpec.EXACTLY -> MeasureSpec.getSize(spec)
-            else -> MeasureSpec.getSize(spec)
+    private fun getBitmapFromDrawable(width: Int, height: Int): Bitmap? {
+        return when (drawable) {
+            null -> null
+            is BitmapDrawable -> (drawable as BitmapDrawable).bitmap
+            else -> {
+                val bmp = drawable.toBitmap(width, height, Config.ARGB_8888)
+                val canvas = Canvas(bmp)
+                drawable.setBounds(0, 0, canvas.width, canvas.height)
+                drawable.draw(canvas)
+                bmp
+            }
         }
-    }
-
-    private fun drawAvatar(canvas: Canvas) {
-        canvas.drawOval(viewRect.toRectF(), avatarPaint)
-    }
-
-    private fun drawInitials(canvas: Canvas) {
-        if (bgColor != null) {
-            initialsPaint.color = bgColor as Int
-        }
-        canvas.drawOval(viewRect.toRectF(), initialsPaint)
-        with(initialsPaint) {
-            color = Color.WHITE
-            textAlign = Paint.Align.CENTER
-            textSize = height * 0.33f
-        }
-        val offsetY = (initialsPaint.descent() + initialsPaint.ascent()) / 2
-        val initialsText: String = initials ?: "??"
-
-        canvas.drawText(
-            initialsText,
-            viewRect.exactCenterX(),
-            viewRect.exactCenterY() - offsetY,
-            initialsPaint
-        )
     }
 }

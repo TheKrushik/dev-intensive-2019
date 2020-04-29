@@ -1,8 +1,6 @@
 package ru.skillbranch.devintensive.ui.profile
 
-import android.graphics.ColorFilter
-import android.graphics.PorterDuff
-import android.graphics.PorterDuffColorFilter
+import android.graphics.*
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -16,7 +14,9 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.activity_profile.*
 import ru.skillbranch.devintensive.R
+import ru.skillbranch.devintensive.extensions.convertSpToPx
 import ru.skillbranch.devintensive.models.Profile
+import ru.skillbranch.devintensive.ui.custom.TextBitmapBuilder
 import ru.skillbranch.devintensive.utils.Utils
 import ru.skillbranch.devintensive.viewmodels.ProfileViewModel
 
@@ -90,10 +90,10 @@ class ProfileActivity : AppCompatActivity() {
         showCurrentMode(isEditMode)
 
         btn_edit.setOnClickListener {
-            if (isEditMode){
-                if (isValidRepository){
+            if (isEditMode) {
+                if (isValidRepository) {
                     saveProfileInfo()
-                }else{
+                } else {
                     et_repository.setText("")
                     return@setOnClickListener
                 }
@@ -112,13 +112,13 @@ class ProfileActivity : AppCompatActivity() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
 //                    Log.d("M_ProfileActivity", "$s ${Utils.isValidUrl(s.toString())}")
-                    if (!Utils.isValidUrl(s.toString())) {
-                        wr_repository.error = "Невалидный адрес репозитория"
-                        isValidRepository = false
-                    } else {
-                        wr_repository.isErrorEnabled = false
-                        isValidRepository = true
-                    }
+                if (!Utils.isValidUrl(s.toString())) {
+                    wr_repository.error = "Невалидный адрес репозитория"
+                    isValidRepository = false
+                } else {
+                    wr_repository.isErrorEnabled = false
+                    isValidRepository = true
+                }
             }
         })
 
@@ -171,17 +171,21 @@ class ProfileActivity : AppCompatActivity() {
     private fun updateAvatar(profile: Profile) {
         val userInitials = Utils.toInitials(profile.firstName, profile.lastName)
         if (userInitials != null) {
-            iv_avatar.setInitials(userInitials)
-            val color = TypedValue()
-            theme.resolveAttribute(R.attr.colorAccent, color, true)
-            iv_avatar.setBgColor(color.data)
-        }else{
-            iv_avatar.setInitials(null)
-//            val avatar = resources.getDrawable(R.drawable.ic_avatar, theme)
-//            iv_avatar.setImageDrawable(avatar)
-//            val bitmap = iv_avatar.drawableToBitmap(avatar)
-//            iv_avatar.setImageBitmap(bitmap)
-        }
+            val avatar = getAvatarBitmap(userInitials)
+            iv_avatar.setImageBitmap(avatar)
+        } else iv_avatar.setImageResource(R.drawable.avatar_default)
+    }
+
+    private fun getAvatarBitmap(text: String): Bitmap {
+        val color = TypedValue()
+        theme.resolveAttribute(R.attr.colorAccent, color, true)
+
+        return TextBitmapBuilder(iv_avatar.layoutParams.width, iv_avatar.layoutParams.height)
+            .setBackgroundColor(color.data)
+            .setText(text)
+            .setTextSize(convertSpToPx(48))
+            .setTextColor(Color.WHITE)
+            .build()
     }
 
 }

@@ -66,7 +66,7 @@ object Utils {
             "ь" -> ""
             "э" -> "e"
             "ю" -> "yu"
-            "я"-> "ya"
+            "я" -> "ya"
             else -> char
         }
     }
@@ -86,4 +86,17 @@ object Utils {
 
         return string.matches(regex)
     }
+
+
+//    fun convertDpToPx(context: Context, dp: Int): Float {
+//        return (dp * context.resources.displayMetrics.density)
+//    }
+//
+//    fun convertPxToDp(context: Context, px: Float): Int {
+//        return (px / context.resources.displayMetrics.density).roundToInt()
+//    }
+//
+//    fun convertSpToPx(context: Context, sp: Int): Int {
+//        return sp * context.resources.displayMetrics.scaledDensity.roundToInt()
+//    }
 }
