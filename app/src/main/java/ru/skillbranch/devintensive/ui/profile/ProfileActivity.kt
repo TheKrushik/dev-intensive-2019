@@ -14,7 +14,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.activity_profile.*
 import ru.skillbranch.devintensive.R
-import ru.skillbranch.devintensive.extensions.convertSpToPx
+import ru.skillbranch.devintensive.extensions.spToPx
 import ru.skillbranch.devintensive.models.Profile
 import ru.skillbranch.devintensive.ui.custom.TextBitmapBuilder
 import ru.skillbranch.devintensive.utils.Utils
@@ -183,7 +183,7 @@ class ProfileActivity : AppCompatActivity() {
         return TextBitmapBuilder(iv_avatar.layoutParams.width, iv_avatar.layoutParams.height)
             .setBackgroundColor(color.data)
             .setText(text)
-            .setTextSize(convertSpToPx(48))
+            .setTextSize(spToPx(48))
             .setTextColor(Color.WHITE)
             .build()
     }

@@ -3,14 +3,14 @@ package ru.skillbranch.devintensive.extensions
 import android.content.Context
 import kotlin.math.roundToInt
 
-fun Context.convertDpToPx(dp: Int): Float {
-    return (dp * this.resources.displayMetrics.density)
+fun Context.dpToPx(dp: Int): Float {
+    return dp.toFloat() * this.resources.displayMetrics.density
 }
 
-fun Context.convertPxToDp(px: Float): Int {
+fun Context.pxToDp(px: Float): Int {
     return (px / this.resources.displayMetrics.density).roundToInt()
 }
 
-fun Context.convertSpToPx(sp: Int): Int {
+fun Context.spToPx(sp: Int): Int {
     return sp * this.resources.displayMetrics.scaledDensity.roundToInt()
 }

@@ -17,12 +17,12 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import ru.skillbranch.devintensive.App
 import ru.skillbranch.devintensive.R
-import ru.skillbranch.devintensive.extensions.convertDpToPx
-import ru.skillbranch.devintensive.extensions.convertPxToDp
+import ru.skillbranch.devintensive.extensions.dpToPx
+import ru.skillbranch.devintensive.extensions.pxToDp
 import kotlin.math.min
 
 @SuppressLint("AppCompatCustomView")
-class CircleImageView @JvmOverloads constructor(
+open class CircleImageView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
@@ -34,7 +34,7 @@ class CircleImageView @JvmOverloads constructor(
     }
 
     private var borderColor = DEFAULT_BORDER_COLOR
-    private var borderWidth = context.convertDpToPx(DEFAULT_BORDER_WIDTH)
+    private var borderWidth = context.dpToPx(DEFAULT_BORDER_WIDTH)
     private val borderPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val circlePaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
@@ -45,7 +45,7 @@ class CircleImageView @JvmOverloads constructor(
             borderColor = a.getColor(R.styleable.CircleImageView_cv_borderColor, DEFAULT_BORDER_COLOR)
             borderWidth = a.getDimension(
                 R.styleable.CircleImageView_cv_borderWidth,
-                context.convertDpToPx(DEFAULT_BORDER_WIDTH)
+                context.dpToPx(DEFAULT_BORDER_WIDTH)
             )
             a.recycle()
         }
@@ -54,10 +54,10 @@ class CircleImageView @JvmOverloads constructor(
     }
 
     @Dimension(unit = DP)
-    fun getBorderWidth(): Int = context.convertPxToDp(borderWidth)
+    fun getBorderWidth(): Int = context.pxToDp(borderWidth)
 
     fun setBorderWidth(@Dimension width: Int) {
-        borderWidth = context.convertDpToPx(width)
+        borderWidth = context.dpToPx(width)
         this.invalidate()
     }
 

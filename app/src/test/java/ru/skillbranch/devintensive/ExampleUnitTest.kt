@@ -4,8 +4,8 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 import ru.skillbranch.devintensive.extensions.*
 import ru.skillbranch.devintensive.models.BaseMessage
-import ru.skillbranch.devintensive.models.Chat
-import ru.skillbranch.devintensive.models.User
+import ru.skillbranch.devintensive.models.data.Chat
+import ru.skillbranch.devintensive.models.data.User
 import ru.skillbranch.devintensive.utils.Utils
 import java.util.*
 
@@ -121,8 +121,8 @@ class ExampleUnitTest {
     fun test_abstract_factory() {
         val user = User.makeUser("Михаил Макеев")
         val user2 = User.makeUser("Василий")
-        val textMessage = BaseMessage.makeMessage(user, Chat("0"), payload = "any text message", type = "text")
-        val imageMessage = BaseMessage.makeMessage(user2, Chat("0"),
+        val textMessage = BaseMessage.makeMessage(user, Chat("0", "text chat"), payload = "any text message", type = "text")
+        val imageMessage = BaseMessage.makeMessage(user2, Chat("0", "image chat"),
                 date = Date().add(-2, TimeUnits.HOUR), payload = "https://anyurl.com", type = "image", isIncoming = true)
 
         println(textMessage.formatMessage())

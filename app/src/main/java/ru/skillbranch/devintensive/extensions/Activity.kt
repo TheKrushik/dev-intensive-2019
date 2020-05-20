@@ -20,11 +20,11 @@ fun Activity.isKeyboardOpen(): Boolean {
     val rect = Rect()
     rootView.getWindowVisibleDisplayFrame(rect)
     val heightDiff = rootView.height - rect.height()
-    val marginOfError = this.convertDpToPx(50F).roundToInt()
+    val marginOfError = this.dpToPx(50F).roundToInt()
     return heightDiff > marginOfError
 }
 
-fun Context.convertDpToPx(dp: Float): Float =
+fun Context.dpToPx(dp: Float): Float =
     TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, this.resources.displayMetrics)
 
 fun Activity.isKeyboardClosed(): Boolean = !isKeyboardOpen()
